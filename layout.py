@@ -6,6 +6,7 @@ class Layout:
         self.header1 = """<!DOCTYPE html><meta charset=UTF-8><title>"""
         self.header2 = (
             f"""</title><link rel=icon href="{self.static("paste.png")}">"""
+            """<meta name=description content="A pastebin that doesn't suck.">"""
             """<meta name=viewport content="width=device-width, initial-scale=1">"""
             f"""<link rel=stylesheet href="{self.static("fonts.css")}">"""
             f"""<link rel=stylesheet href="{self.static("highlight.css")}">"""
