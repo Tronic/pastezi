@@ -40,7 +40,7 @@ class Layout:
             f"""<a id=copy role=button aria-label="Copy all" href="javascript:copy_all_without_formatting()"></a>"""
             f"""<a id=dl role=button aria-label=Download href="{self.url("get_paste", paste_id=paste_id)}"></a>"""
         )
-        body += f"""<a id=edit href="{self.url("edit_paste", paste_id=paste_id)}"></a>"""
+        body += f"""<a id=edit role=button aria-label=Edit href="{self.url("edit_paste", paste_id=paste_id)}"></a>"""
         body += "<p id=notify></header>"
         body += paste["html"] if paste else f"<p>{paste_id} not found. This paste may have been deleted or you got the address wrong."
         return self(body, title=paste_id or "Zipaste")
