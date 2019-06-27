@@ -19,7 +19,7 @@ const notify = msg => {
     console.log("Notify: ", msg)
     const elem = document.querySelector("#notify")
     elem.textContent = msg
-    setTimeout(() => elem.textContent = "", 1000)
+    setTimeout(() => elem.textContent = "", 2000)
 }
 
 const shake = button_selector => {

@@ -26,10 +26,10 @@ class Layout:
         head = f"""<form action="{self.url("post_paste")}" method=POST enctype=multipart/form-data>"""
         body = (
             f"""<label id=open role=button aria-label="Open file"><input type=file name=paste></label>"""
-            f"""<input id=paste_id name=paste_id value="{paste_id or ""}" placeholder=filename.txt """ """pattern="[^/]{3,}" autocomplete=off>"""
+            f"""<label>Save as:<input id=paste_id name=paste_id value="{paste_id or ""}" placeholder=filename.txt """ """pattern="[^/]{3,}" autocomplete=off autofocus></label>"""
             f"""<label id=upload role=button aria-label=Upload><input type=submit></label>"""
             """<p id=notify></header>"""
-            f"""<textarea id=paste name=paste autofocus>{text}</textarea></form>"""
+            f"""<textarea id=paste name=paste>{text}</textarea></form>"""
             """<footer><a href="https://github.com/Tronic/pastezi">Pastezi</a></footer>"""
         )
         return self(body, head, title=paste_id or "Zipaste")
@@ -37,8 +37,8 @@ class Layout:
     def view_paste(self, paste, paste_id):
         body = "<h1>" + paste_id + "</h1>"
         if paste: body += (
-            f"""<a id=copy href="javascript:copy_all_without_formatting()"></a>"""
-            f"""<a id=dl href="{self.url("get_paste", paste_id=paste_id)}"></a>"""
+            f"""<a id=copy role=button aria-label="Copy all" href="javascript:copy_all_without_formatting()"></a>"""
+            f"""<a id=dl role=button aria-label=Download href="{self.url("get_paste", paste_id=paste_id)}"></a>"""
         )
         body += f"""<a id=edit href="{self.url("edit_paste", paste_id=paste_id)}"></a>"""
         body += "<p id=notify></header>"

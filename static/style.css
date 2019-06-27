@@ -12,7 +12,6 @@ html { font-size: calc(var(--fontsz) * 1px); white-space: pre-wrap; }
 @media(max-width: 960px) { html { font-size: calc(var(--fontsz) / 960 * 100vw); } }
 @media(min-width: 1920px) { html { font-size: calc(var(--fontsz) / 1920 * 100vw); } }
 body { background: #444; color: #fc3; font: var(--codefnt); }
-#paste_id { content: "Save as:"; }
 #new { background-image: url("paste.png"); }
 #open { background-image: url("open.png"); }
 #upload { background-image: url("upload.png"); }
@@ -22,12 +21,12 @@ body { background: #444; color: #fc3; font: var(--codefnt); }
 footer { font: 0.6rem Verdana; color: #666; text-align: justify; padding: 1rem; }
 footer b { white-space: nowrap; }
 footer a { color: #fc3; font-weight: bold; }
-::placeholder { color: #ccc; }
+::placeholder { color: #666; }
 header { transition: all 100ms; }
-header a:hover, header a:focus, header label:hover, header label:focus { transform: scale(1.2); outline: none; }
+header [role="button"]:hover, header [role="button"]:focus-within { transform: scale(1.2); outline: none; }
 .shake { transform: scale(1.2) translate(0, 0.1em); }
 header { display: flex; align-items: center; }
-header label, header a { width: 4rem; height: 4rem; background-position: 50%; background-size: 3rem 3rem; background-repeat: no-repeat; }
+header [role="button"] { width: 4rem; height: 4rem; background-position: 50%; background-size: 3rem 3rem; background-repeat: no-repeat; }
 textarea, .CodeMirror {
     width: 100vw;
     min-height: 80vh;
