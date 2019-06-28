@@ -18,8 +18,7 @@ body { background: #444; color: #fc3; font: var(--codefnt); }
 #copy { background-image: url("copy.png"); }
 #dl { background-image: url("dl.png"); }
 #edit { background-image: url("edit.png"); }
-footer { font: 0.6rem Verdana; color: #666; text-align: justify; padding: 1rem; }
-footer b { white-space: nowrap; }
+footer { color: #666; text-align: justify; padding: 1rem; }
 footer a { color: #fc3; font-weight: bold; }
 ::placeholder { color: #666; }
 header { transition: all 100ms; }

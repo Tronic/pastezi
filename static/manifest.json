@@ -1,0 +1,12 @@
+{
+    "name": "Pastezi",
+    "description": "A pastebin that doesn't suck.",
+    "icons": [
+        { "src": "/_/paste.png", "type": "image/png", "sizes": "100x100" }
+    ],
+    "start_url": "/",
+    "background_color": "#333",
+    "display": "standalone",
+    "theme_color": "#fc3",
+    "permissions": [ "clipboardRead", "clipboardWrite", "downloads" ]
+}

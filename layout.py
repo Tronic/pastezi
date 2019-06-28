@@ -8,6 +8,7 @@ class Layout:
             f"""</title><link rel=icon href="{self.static("paste.png")}">"""
             """<meta name=description content="A pastebin that doesn't suck.">"""
             """<meta name=viewport content="width=device-width, initial-scale=1">"""
+            f"""<link rel=manifest href="{self.static("manifest.json")}">"""
             f"""<link rel=stylesheet href="{self.static("fonts.css")}">"""
             f"""<link rel=stylesheet href="{self.static("highlight.css")}">"""
             f"""<link rel=stylesheet href="{self.static("codemirror/theme/pastel-on-dark.css")}">"""
