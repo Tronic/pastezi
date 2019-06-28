@@ -33,7 +33,7 @@ class Layout:
             f"""<textarea id=paste name=paste>{text}</textarea></form>"""
             """<footer><a href="https://github.com/Tronic/pastezi">Pastezi</a></footer>"""
         )
-        return self(body, head, title=paste_id or "Zipaste")
+        return self(body, head, title=paste_id or "Pastezi")
 
     def view_paste(self, paste, paste_id):
         body = "<h1>" + paste_id + "</h1>"
@@ -44,4 +44,4 @@ class Layout:
         body += f"""<a id=edit role=button aria-label=Edit href="{self.url("edit_paste", paste_id=paste_id)}"></a>"""
         body += "<p id=notify></header>"
         body += paste["html"] if paste else f"<p>{paste_id} not found. This paste may have been deleted or you got the address wrong."
-        return self(body, title=paste_id or "Zipaste")
+        return self(body, title=paste_id or "Pastezi")
