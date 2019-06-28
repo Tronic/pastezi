@@ -30,6 +30,7 @@ textarea, .CodeMirror {
     width: 100vw;
     min-height: 80vh;
     font: var(--codefnt);
+    background:
 }
 h1 {
     display: inline; font-size: 1rem;
@@ -88,5 +89,10 @@ header input[type="file"], input[type="submit"] { position: absolute; width: 0.1
     color: #eee;
     content: "⟼";
     border-right: 1px solid #eee;
- }
- pre, textarea { tab-size: var(--tabsz); }
+}
+pre, textarea { tab-size: var(--tabsz); }
+/* Override base theme for editor and also specify for plain textarea */
+textarea, .cm-s-pastel-on-dark.CodeMirror {
+	background: #222;
+	color: #888;
+}
