@@ -22,7 +22,7 @@ class Layout:
     def __call__(self, body, head = "", title = ""):
         return self.header1 + title + self.header2 + head + self.nav_start + body
 
-    def edit_paste(self, paste, paste_id, mod):
+    def edit_paste(self, paste, paste_id):
         text = escape(paste["text"]) if paste else ""
         head = f"""<form action="{self.url("post_paste")}" method=POST enctype=multipart/form-data>"""
         body = (
