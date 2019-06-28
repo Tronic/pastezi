@@ -61,7 +61,8 @@ const send_paste_async = async () => {
     const text = editor ? editor.getValue() : textarea.value;
     const has_text = text.trim().length > 0
     const form = document.querySelector("form")
-    const res = await fetch("/" + encodeURIComponent(idinput.value || ""), {
+    const paste_id = idinput.value.trim()
+    const res = await fetch(paste_id.length ? "/p/" + encodeURIComponent(paste_id) : "/", {
         method: has_text ? "PUT" : "DELETE",
         body: has_text ? text : undefined,
     })
@@ -151,3 +152,5 @@ const updateMode = () => {
         }
     })
 }
+
+if (navigator.serviceWorker) navigator.serviceWorker.register("/serviceworker.js", {scope: "/"})
