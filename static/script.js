@@ -47,7 +47,7 @@ window.addEventListener("load", () => {
     updateMode()
     /* Automatic paste in Chrome */
     if (navigator.clipboard.readText && editor.getValue().trim().length === 0) {
-        navigator.clipboard.readText().then(text => text.startsWith(location.href) ? "" : editor.setValue(text)).catch(console.log)
+        navigator.clipboard.readText().then(text => text.startsWith(location.href) ? "" : editor ? editor.setValue(text) : textarea.value = text)
     }
 })
 
