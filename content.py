@@ -42,10 +42,15 @@ def prettyprint(paste, paste_id):
 @make_async
 def process_paste(paste, paste_id):
     if isinstance(paste, bytes):
-        try: paste = paste.decode()
+        # Charset autodetection (much better than chardet module)
+        # - UTF16-LE with BOM is commonly used in Windows; if no BOM, default to UTF-8
+        # - Fallback to 8-bit: ISO-8895-1 unless the content looks more like DOS CP437
+        # - ISO-8859-1 and CP437 can decode any byte, and thus will never fail (in contrast to, e.g. CP1252)
+        try: paste = paste.decode("UTF-16LE" if paste[:2] == b"\xFF\xFE" else "UTF-8")
         except UnicodeDecodeError:
-            if b"\0" in paste: raise InvalidUsage("Binary files are not supported!")
-            paste = paste.decode("ISO-8859-1")
+            if 0 in paste: raise InvalidUsage("Binary files are not supported!")
+            paste = paste.decode("CP437" if any(0x80 <= ch < 0xA0 for ch in paste) and b"\r\n" in paste else "ISO-8859-1")
+    if paste[0] == "\uFEFF": paste = paste[1:]  # Remove Unicode BOM
     paste = paste.replace("\r\n", "\n").strip()
     if not paste: raise InvalidUsage("Empty paste (no data found)")
     paste += "\n"  # Training newline for downloads
