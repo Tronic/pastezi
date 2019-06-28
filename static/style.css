@@ -30,7 +30,6 @@ textarea, .CodeMirror {
     width: 100vw;
     min-height: 80vh;
     font: var(--codefnt);
-    background:
 }
 h1 {
     display: inline; font-size: 1rem;
@@ -97,3 +96,4 @@ textarea, .cm-s-pastel-on-dark.CodeMirror {
     color: #888;
     border: none;
 }
+textarea { padding: 0.3em; }

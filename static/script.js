@@ -46,10 +46,13 @@ window.addEventListener("load", () => {
     idinput.addEventListener("change", updateMode)
     updateMode()
     /* Automatic paste in Chrome */
-    if (navigator.clipboard.readText && editor.getValue().trim().length === 0) {
-        navigator.clipboard.readText().then(text => text.startsWith(location.href) ? "" : editor ? editor.setValue(text) : textarea.value = text)
+    if (navigator.clipboard.readText && get().length === 0) {
+        navigator.clipboard.readText().then(text => text.startsWith(location.href) ? "" : set(text))
     }
 })
+
+const get = () => (editor ? editor.getValue() : textarea.value).trim()
+const set = text => editor ? editor.setValue(text) : textarea.value = text
 
 const send_paste = ev => {
     ev.preventDefault()
@@ -58,9 +61,8 @@ const send_paste = ev => {
 
 const send_paste_async = async () => {
     shake("#upload")
-    const text = editor ? editor.getValue() : textarea.value;
-    const has_text = text.trim().length > 0
-    const form = document.querySelector("form")
+    const text = get();
+    const has_text = text.length > 0
     const paste_id = idinput.value.trim()
     const res = await fetch(paste_id.length ? "/p/" + encodeURIComponent(paste_id) : "/", {
         method: has_text ? "PUT" : "DELETE",
@@ -122,8 +124,7 @@ const fileOpen = async () => {
     if (!text) return
     if (idinput.value.length === 0) idinput.value = file.name
     fileinput.value = ""
-    if (editor) editor.setValue(text)
-    else textarea.value = text
+    set(text)
     setTimeout(updateMode, 0)
 }
 
