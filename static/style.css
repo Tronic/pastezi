@@ -94,5 +94,6 @@ pre, textarea { tab-size: var(--tabsz); }
 /* Override base theme for editor and also specify for plain textarea */
 textarea, .cm-s-pastel-on-dark.CodeMirror {
 	background: #222;
-	color: #888;
+    color: #888;
+    border: none;
 }
