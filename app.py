@@ -45,14 +45,14 @@ async def post_paste(req):
     paste, paste_id = req.form.get("paste"), req.form.get("paste_id")
     if not paste and "paste" in req.files:
         mime, paste, paste_id = req.files["paste"][0]
-    paste_id, paste_object = await content.process_paste(paste, paste_id)
+    paste_id, paste_object = await content.process_paste(paste, paste_id, fallback_charset=req.args.get("charset"))
     created = await backend.store(paste_id, paste_object)
     return redirect(app.url_for("view_paste", paste_id=paste_id), status=200+created)
 
 @app.put("/")
 @app.put("/<paste_id>", name="put_paste")
 async def put_paste(req, paste_id=None):
-    paste_id, paste_object = await content.process_paste(req.body, paste_id)
+    paste_id, paste_object = await content.process_paste(req.body, paste_id, fallback_charset=req.args.get("charset"))
     created = await backend.store(paste_id, paste_object)
     return text(app.url_for("view_paste", paste_id=paste_id, _external=True) + "\n", status=200+created)
 

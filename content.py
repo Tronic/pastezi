@@ -39,18 +39,25 @@ def prettyprint(paste, paste_id):
     except Exception: lexer = get_lexer_for_filename(paste_id + ".txt")
     return pygments.highlight(paste, lexer, formatter)
 
+def decode(text: bytes, fallback_charset: str = None) -> str:
+    """Decode with charset autodetection."""
+    # Unicode strings with BOMs
+    boms = (b"\xEF\xBB\xBF", "UTF-8"), (b"\xFF\xFE", "UTF-16LE"), (b"\xFE\xFF", "UTF-16BE"), (b"\xFF\xFE\0\0", "UTF-32LE"), (b"\0\0\xFE\xFF", "UTF-32BE")
+    for bom, charset in boms:
+        if text.startswith(bom): return text[len(bom):].decode(charset, errors="replace")
+    # Try UTF-8 without BOM
+    try: return text.decode()
+    except UnicodeDecodeError: pass
+    # If fallback is provided, just use that
+    if fallback_charset: return text.decode(fallback_charset, errors="replace")
+    # 8-bit guesswork (NUL usually means binary file; CP437 umlauts are more likely than ISO-8859-1 extended control chars)
+    if 0 in text: raise UnicodeDecodeError("Binary files are not supported!")
+    return text.decode("CP437" if any(0x80 <= ch < 0xA0 for ch in text) and b"\r\n" in text else "ISO-8859-1")
+
 @make_async
-def process_paste(paste, paste_id):
-    if isinstance(paste, bytes):
-        # Charset autodetection (much better than chardet module)
-        # - UTF16-LE with BOM is commonly used in Windows; if no BOM, default to UTF-8
-        # - Fallback to 8-bit: ISO-8895-1 unless the content looks more like DOS CP437
-        # - ISO-8859-1 and CP437 can decode any byte, and thus will never fail (in contrast to, e.g. CP1252)
-        try: paste = paste.decode("UTF-16LE" if paste[:2] == b"\xFF\xFE" else "UTF-8")
-        except UnicodeDecodeError:
-            if 0 in paste: raise InvalidUsage("Binary files are not supported!")
-            paste = paste.decode("CP437" if any(0x80 <= ch < 0xA0 for ch in paste) and b"\r\n" in paste else "ISO-8859-1")
-    if paste[0] == "\uFEFF": paste = paste[1:]  # Remove Unicode BOM
+def process_paste(paste, paste_id, fallback_charset = None):
+    if isinstance(paste, bytes): paste = decode(paste, fallback_charset)
+    elif paste[0] == "\uFEFF": paste = paste[1:]  # Remove Unicode BOM
     paste = paste.replace("\r\n", "\n").strip()
     if not paste: raise InvalidUsage("Empty paste (no data found)")
     paste += "\n"  # Training newline for downloads

@@ -40,7 +40,7 @@ window.addEventListener("load", () => {
     CodeMirror.modeURL = "/_/codemirror/mode/%N/%N.js";
     editor = CodeMirror.fromTextArea(textarea, { lineNumbers: true, indentUnit: 4, tabSize: 4, viewportMargin: Infinity, theme: "pastel-on-dark" })
     fileinput = document.querySelector("input[type=file]")
-    fileinput.addEventListener("change", fileUpload)
+    fileinput.addEventListener("change", fileOpen)
     idinput.addEventListener("change", updateMode)
     updateMode()
     /* Automatic paste in Chrome */
@@ -74,7 +74,7 @@ const send_paste_async = async () => {
 
 const download = ev => {
     shake("#dl")
-    window.location = document.querySelector("#dl").href
+    window.location = document.querySelector("#dl").href  // File is saved, user stays on current page
     ev.preventDefault()
 }
 
@@ -95,19 +95,33 @@ document.onkeydown = function(e) {
     }
 }
 
-function fileUpload(ev) {
-    const file = this.files[0]
-    if (!file) return
-    if (idinput.value.length === 0) idinput.value = file.name
-    const reader = new FileReader()
-    reader.onload = () => {
-        fileinput.value = ""
-        if (editor) editor.setValue(reader.result)
-        else textarea.value = reader.result
-        setTimeout(updateMode, 0)
+const decode = text => {
+    // Unicode strings with BOMs
+    const header = new TextDecoder("ISO-8859-1").decode(text.slice(0, 4));  /* Kludge to allow compare on arraybuffer */
+    const boms = {"\xEF\xBB\xBF": "UTF-8", "\xFF\xFE": "UTF-16LE", "\xFE\xFF": "UTF-16BE", "\xFF\xFE\0\0": "UTF-32LE", "\0\0\xFE\xFF": "UTF-32BE"}
+    for (const bom in boms) {
+        if (header.startsWith(bom)) return new TextDecoder(boms[bom]).decode(header.slice(bom.length))
     }
-    reader.onerror = () => console.log("Reading file failed")
-    reader.readAsText(file)
+    // Try UTF-8 without BOM
+    try {
+        return new TextDecoder("UTF-8", {fatal: true}).decode(text)
+    } catch(err) {}
+    // 8-bit guesswork (NUL usually means binary file; use ?charset= parameter or otherwise assume Latin-1)
+    const utext = new Uint8Array(text)
+    if (utext.includes(0)) return notify("Binary files are not supported!")
+    return new TextDecoder(new URLSearchParams(window.location.search).get("charset") || "ISO-8859-1").decode(text)
+}
+
+const fileOpen = async () => {
+    const file = fileinput.files[0]
+    if (!file) return
+    const text = decode(await new Response(file).arrayBuffer())
+    if (!text) return
+    if (idinput.value.length === 0) idinput.value = file.name
+    fileinput.value = ""
+    if (editor) editor.setValue(text)
+    else textarea.value = text
+    setTimeout(updateMode, 0)
 }
 
 const updateMode = () => {
