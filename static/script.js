@@ -37,8 +37,10 @@ window.addEventListener("load", () => {
     if (!idinput) return  /* Viewing paste, not editing */
     document.querySelector("form").addEventListener("submit", send_paste)
     textarea = document.querySelector("#paste")
-    CodeMirror.modeURL = "/_/codemirror/mode/%N/%N.js";
-    editor = CodeMirror.fromTextArea(textarea, { lineNumbers: true, indentUnit: 4, tabSize: 4, viewportMargin: Infinity, theme: "pastel-on-dark" })
+    if (!/(android)/i.test(navigator.userAgent)) {
+        CodeMirror.modeURL = "/_/codemirror/mode/%N/%N.js";
+        editor = CodeMirror.fromTextArea(textarea, { lineNumbers: true, indentUnit: 4, tabSize: 4, viewportMargin: Infinity, theme: "pastel-on-dark" })
+    }
     fileinput = document.querySelector("input[type=file]")
     fileinput.addEventListener("change", fileOpen)
     idinput.addEventListener("change", updateMode)
