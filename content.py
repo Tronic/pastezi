@@ -31,20 +31,24 @@ matchers = {
 }
 
 class Formatter(HtmlFormatter):
+    # Link & anchor line numbers
     def _wrap_lineanchors(self, inner):
-        s = self.lineanchors
-        # subtract 1 since we have to increment i *before* yielding
         i = self.linenostart - 1
         for t, line in inner:
             if t:
                 i += 1
-                yield 1, f'<a class=lineno href=#{i} name={i}></a>' + line
+                yield 1, f'<a class=line href=#{i} id={i}></a>' + line
             else:
                 yield 0, line
+    # A bit shorther wrapper
+    def _wrap_pre(self, inner):
+        yield 0, '<pre><code>'
+        yield from inner
+        yield 0, '</code></pre>'
 
 def prettyprint(paste, paste_id):
     n = 1 + re.search("^\s*", paste)[0].count("\n")  # Pygments removes initial empty lines, account for that
-    formatter = Formatter(lineanchors="line", linenostart=n, wrapcode=True)
+    formatter = Formatter(lineanchors=True, linenostart=n)
     try: lexer = get_lexer_for_filename(paste_id)
     except Exception: lexer = get_lexer_for_filename(paste_id + ".txt")
     return pygments.highlight(paste, lexer, formatter)

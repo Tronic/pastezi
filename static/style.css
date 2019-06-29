@@ -22,23 +22,23 @@ footer { color: #666; text-align: justify; padding: 1rem; }
 footer a { color: #fc3; font-weight: bold; }
 ::placeholder { color: #666; }
 header { transition: all 100ms; }
-header [role="button"]:hover, header [role="button"]:focus-within { transform: scale(1.2); outline: none; }
+header [title]:hover, header [title]:focus-within { transform: scale(1.2); outline: none; }
 .shake { transform: scale(1.2) translate(0, 0.1em); }
 header { display: flex; align-items: center; }
-header [role="button"] { width: 4rem; height: 4rem; background-position: 50%; background-size: 3rem 3rem; background-repeat: no-repeat; }
+header [title] { width: 4rem; height: 4rem; background-position: 50%; background-size: 3rem 3rem; background-repeat: no-repeat; }
 textarea, .CodeMirror {
     width: 100vw;
     min-height: 80vh;
     font: var(--codefnt);
 }
-h1 {
+data::before {
+    content: attr(value);
     display: inline; font-size: 1rem;
 }
 header input[type="file"], input[type="submit"] { position: absolute; width: 0.1px; height: 0.1px; margin-top: -1000vh; }
-#paste_id::before { content: "Save as: "; }
-#paste_id { width: 20em; font: var(--codefnt); border: none; border-radius: 3px; padding: 3px; color: #fc3; background: black; }
+input#paste_id { width: 20em; font: var(--codefnt); border: none; border-radius: 3px; padding: 3px; color: #fc3; background: black; }
 .highlight { padding-left: var(--lineno-margin); padding-right: 1em; width: 100vw; }
-.highlight pre {
+.highlight code {
     width: 100%;
     border-left: 1px solid #8888;
     padding: 0.3em;
@@ -49,9 +49,8 @@ header input[type="file"], input[type="submit"] { position: absolute; width: 0.1
     font-family: var(--codefnt);
 }
 /* Line numbers in /view */
-.highlight .lineno::before {
-    counter-increment: line;
-    content: attr(name);
+.highlight .line::before {
+    content: attr(id);
     display: inline-block;
     position: absolute;
     left: 0;
@@ -63,14 +62,19 @@ header input[type="file"], input[type="submit"] { position: absolute; width: 0.1
     white-space: nowrap;
 }
 /* Hilight linked-to linenumber */
-.highlight .lineno:target::before {
-    color: #ff0;
+.highlight .line:target::before {
+    color: #fc3;
 }
 #notify {
     color: white;
     font-weight: bold;
     text-align: center;
     text-shadow: 0 0 5px black;
+    transition: opacity 200ms;
+    opacity: 0;
+}
+#notify.visible {
+    opacity: 1;
 }
 /* Remove some cruft when printing */
 @media print {
@@ -93,7 +97,7 @@ header input[type="file"], input[type="submit"] { position: absolute; width: 0.1
     content: "⟼";
     border-right: 1px solid #444;
 }
-pre, textarea { tab-size: var(--tabsz); }
+code, textarea { tab-size: var(--tabsz); }
 /* Override base theme for editor and also specify for plain textarea */
 textarea, .cm-s-pastel-on-dark.CodeMirror {
 	background: #222;

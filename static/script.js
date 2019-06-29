@@ -15,11 +15,15 @@ const copy_all_without_formatting = () => {
     shake("#copy")
 }
 
+var notify_timeout
+
 const notify = msg => {
     console.log("Notify: ", msg)
     const elem = document.querySelector("#notify")
-    elem.textContent = msg
-    setTimeout(() => elem.textContent = "", 2000)
+    elem.value = msg
+    elem.classList.add("visible")
+    clearTimeout(notify_timeout)
+    notify_timeout = setTimeout(() => elem.classList.remove("visible"), 2000)
 }
 
 const shake = button_selector => {
@@ -33,7 +37,7 @@ let editor, textarea, idinput, fileinput
 window.addEventListener("load", () => {
     const flash = sessionStorage.getItem("flash")
     if (flash) { sessionStorage.removeItem("flash"); notify(flash) }
-    idinput = document.querySelector("#paste_id")
+    idinput = document.querySelector("input#paste_id")
     if (!idinput) return  /* Viewing paste, not editing */
     document.querySelector("form").addEventListener("submit", send_paste)
     textarea = document.querySelector("#paste")
