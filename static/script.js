@@ -37,7 +37,9 @@ window.addEventListener("load", () => {
     if (!idinput) return  /* Viewing paste, not editing */
     document.querySelector("form").addEventListener("submit", send_paste)
     textarea = document.querySelector("#paste")
-    if (!/(android)/i.test(navigator.userAgent)) {
+    let use_editor = new URLSearchParams(window.location.search).get("editor")
+    if (use_editor === null) use_editor = /(android)/i.test(navigator.userAgent) ? "0" : "1"
+    if (use_editor === "1") {
         CodeMirror.modeURL = "/codemirror/mode/%N/%N.js";
         editor = CodeMirror.fromTextArea(textarea, { lineNumbers: true, indentUnit: 4, tabSize: 4, viewportMargin: Infinity, theme: "pastel-on-dark" })
     }
@@ -47,11 +49,15 @@ window.addEventListener("load", () => {
     updateMode()
     /* Automatic paste in Chrome */
     if (navigator.clipboard.readText && get().length === 0) {
-        navigator.clipboard.readText().then(text => text.startsWith(location.href) ? "" : set(text))
+        navigator.clipboard.readText().then(text => {
+            if (text.startsWith(location.origin) || text.trim().length === 0) return
+            set(text)
+            notify(" ⃪ click to upload auto-pasted text")
+        })
     }
 })
 
-const get = () => (editor ? editor.getValue() : textarea.value).trim()
+const get = () => (editor ? editor.getValue() : textarea.value)
 const set = text => editor ? editor.setValue(text) : textarea.value = text
 
 const send_paste = ev => {

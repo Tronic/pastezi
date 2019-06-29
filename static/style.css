@@ -1,8 +1,8 @@
 @charset "UTF-8";
 :root {
     --fontsz: 16;
-    --codefnt: 1rem/1.3 "Roboto Mono", monospace, "Noto Color Emoji";
-    --tabsz: 3.141592ch;  /* Slightly less than four spaces to b0rk invalid indentation */
+    --codefnt: 1rem/1.5 "Roboto Mono", monospace, "Noto Color Emoji";
+    --tabsz: 3.7ch;  /* Slightly less than four spaces to b0rk invalid indentation */
     --lineno-margin: 4ch;
 }
 /* Minimal CSS reset */
@@ -49,9 +49,9 @@ header input[type="file"], input[type="submit"] { position: absolute; width: 0.1
     font-family: var(--codefnt);
 }
 /* Line numbers in /view */
-.highlight a::before {
+.highlight .lineno::before {
     counter-increment: line;
-    content: counter(line);
+    content: attr(name);
     display: inline-block;
     position: absolute;
     left: 0;
@@ -61,6 +61,10 @@ header input[type="file"], input[type="submit"] { position: absolute; width: 0.1
     width: var(--lineno-margin);
     color: #999;
     white-space: nowrap;
+}
+/* Hilight linked-to linenumber */
+.highlight .lineno:target::before {
+    color: #ff0;
 }
 #notify {
     color: white;
@@ -85,9 +89,9 @@ header input[type="file"], input[type="submit"] { position: absolute; width: 0.1
     display: inline-block;
     width: var(--tabsz);
     font-size: 1rem;
-    color: #eee;
+    color: #444;
     content: "⟼";
-    border-right: 1px solid #eee;
+    border-right: 1px solid #444;
 }
 pre, textarea { tab-size: var(--tabsz); }
 /* Override base theme for editor and also specify for plain textarea */

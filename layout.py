@@ -31,7 +31,7 @@ class Layout:
             f"""<label>Save as:<input id=paste_id name=paste_id value="{paste_id or ""}" placeholder=filename.txt """ """pattern="[^/]{3,}" autocomplete=off autofocus></label>"""
             f"""<label id=upload role=button aria-label=Upload><input type=submit></label>"""
             """<p id=notify></header>"""
-            f"""<textarea id=paste name=paste>{text}</textarea></form>"""
+            f"""<textarea id=paste name=paste>\n{text}</textarea></form>"""
             """<footer><a href="https://github.com/Tronic/pastezi">Pastezi</a></footer>"""
         )
         return self(body, head, title=paste_id or "Pastezi")

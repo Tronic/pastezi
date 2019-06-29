@@ -14,6 +14,7 @@ matchers = {
     ".html": re.compile(r"^\s*<!doctype html", re.IGNORECASE),
     ".svg": re.compile(r"^\s*<!doctype svg", re.IGNORECASE),
     ".xml": re.compile(r"^\s*<?xml "),
+    ".php": re.compile(r"^\s*<\?php\s", re.IGNORECASE),
     ".js": re.compile(r"""^\s*["']use strict["']"""),
     ".css": re.compile(r"^@charset ", re.IGNORECASE),
     # Try matching content on any line of the file
@@ -24,17 +25,26 @@ matchers = {
     ".java": re.compile(r"^public class \w+", re.MULTILINE),
     ".cpp": re.compile(r"#include .*\w::\w|using namespace \w+;", re.DOTALL),
     ".c": re.compile(r"#include .*(malloc|printf)\(|int main\(void\)", re.DOTALL),
-    ".js": re.compile(r"""^\s*console.log\(|^\s*(var|let|const) \w+ = require|\) => {$|^function( \w)?\(""", re.MULTILINE),
+    ".js": re.compile(r"^\s*console.log\(|^\s*(var|let|const) \w+ = require|\) => {$|^\s*function( \w+)?\(", re.MULTILINE),
+    ".php": re.compile(r"<\?php.*\?>"),
     ".css": re.compile(r"^\s*(color: *#[0-9a-fA-F]{3,6}|width: \d+(px|r?em|%));$", re.IGNORECASE | re.MULTILINE),
 }
 
-formatter = HtmlFormatter(lineanchors=True)
-
-def prepare_highlight(staticdir):
-    with open(os.path.join(staticdir, "highlight.css"), "w") as f:
-        f.write(formatter.get_style_defs())
+class Formatter(HtmlFormatter):
+    def _wrap_lineanchors(self, inner):
+        s = self.lineanchors
+        # subtract 1 since we have to increment i *before* yielding
+        i = self.linenostart - 1
+        for t, line in inner:
+            if t:
+                i += 1
+                yield 1, f'<a class=lineno href=#{i} name={i}></a>' + line
+            else:
+                yield 0, line
 
 def prettyprint(paste, paste_id):
+    n = 1 + re.search("^\s*", paste)[0].count("\n")  # Pygments removes initial empty lines, account for that
+    formatter = Formatter(lineanchors="line", linenostart=n, wrapcode=True)
     try: lexer = get_lexer_for_filename(paste_id)
     except Exception: lexer = get_lexer_for_filename(paste_id + ".txt")
     return pygments.highlight(paste, lexer, formatter)
@@ -58,9 +68,9 @@ def decode(text: bytes, fallback_charset: str = None) -> str:
 def process_paste(paste, paste_id, fallback_charset = None):
     if isinstance(paste, bytes): paste = decode(paste, fallback_charset)
     elif paste[0] == "\uFEFF": paste = paste[1:]  # Remove Unicode BOM
-    paste = paste.replace("\r\n", "\n").strip()
-    if not paste: raise InvalidUsage("Empty paste (no data found)")
-    paste += "\n"  # Training newline for downloads
+    paste = paste.replace("\r\n", "\n")
+    if not paste.strip(): raise InvalidUsage("Empty paste (no data found)")
+    if not paste.endswith("\n"): paste += "\n"
     if paste_id:
         paste_id = "".join([c for c in paste_id.replace(" ", "_") if re.match(r'[-_\w\.]', c)])
     if not paste_id or len(paste_id) < 3:
