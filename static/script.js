@@ -72,8 +72,9 @@ const send_paste = ev => {
 const send_paste_async = async () => {
     shake("#upload")
     const text = get();
-    const has_text = text.length > 0
+    const has_text = text.trim().length > 0
     const paste_id = idinput.value.trim()
+    if (!has_text && paste_id.length === 0) return notify("Write some text in the box first!")
     const res = await fetch(paste_id.length ? "/p/" + encodeURIComponent(paste_id) : "/", {
         method: has_text ? "PUT" : "DELETE",
         body: has_text ? text : undefined,
