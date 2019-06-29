@@ -37,7 +37,7 @@ class Formatter(HtmlFormatter):
         for t, line in inner:
             if t:
                 i += 1
-                yield 1, f'<a class=line href=#{i} id={i}></a>' + line
+                yield 1, f'<a class=line href=#{i} id={i} tabindex=-1></a>' + line
             else:
                 yield 0, line
     # A bit shorther wrapper
