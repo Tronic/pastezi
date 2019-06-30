@@ -8,6 +8,16 @@
     --lineno-color: #8886;
     --lineno-highlight: #fc3;
 }
+/* Printing styles */
+:root {
+    --comment: grey;
+    --number: #9a4;
+    --string: #860;
+    --regex: #c60;
+    --operator: #888;
+    --attribute: #CE9178;
+    --keyword: #28c;
+}
 @media screen {
     :root {
         --background: #222;
@@ -26,20 +36,8 @@
         --meta: #c586c0;
         --bracket: #888;
     }
-    /* Underline errors; wavy doesn't work too well in Chrome */
+    /* Dashed-underline errors; wavy doesn't work too well in Chrome */
     .cm-s-default span.cm-error, .highlight .err { text-decoration: underline dashed red; }
-}
-@media print {
-    :root {
-        --background: transparent;
-        --text: black;
-        --comment: grey;
-        --number: #080;
-        --string: #860;
-        --regex: #c60;
-        --operator: #888;
-        --attribute: #CE9178;
-    }
 }
 .highlight code, .CodeMirror {
     color: var(--text);
@@ -121,3 +119,10 @@ textarea, .CodeMirror {
 }
 code, textarea { font: var(--codefnt); tab-size: var(--tabsz); }
 textarea { padding: 0.3em; border: none; }
+
+@media print {
+    .highlight .line::before {
+        font-size: 0.9rem;  /* Workaround some b0rkage with page feeds in Chrome */
+    }
+    .cm-s-default .CodeMirror-gutters { display: none; }
+}

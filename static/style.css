@@ -1,6 +1,8 @@
 @charset "UTF-8";
 :root {
     --fontsz: 16;
+    --site-highlight: #fc3;
+    --site-background: #444;
 }
 /* Minimal CSS reset */
 * { margin: 0; padding: 0; outline: none; box-sizing: border-box; }
@@ -8,7 +10,7 @@
 html { font-size: calc(var(--fontsz) * 1px); white-space: pre-wrap; }
 @media(max-width: 960px) { html { font-size: calc(var(--fontsz) / 960 * 100vw); } }
 @media(min-width: 1920px) { html { font-size: calc(var(--fontsz) / 1920 * 100vw); } }
-body { background: #444; color: #fc3; font: var(--codefnt); }
+body { background: var(--site-background); font: var(--codefnt); }
 /* Header buttons */
 header { transition: all 100ms; display: flex; align-items: center; }
 header [title] { width: 4rem; height: 4rem; background-position: 50%; background-size: 3rem 3rem; background-repeat: no-repeat; }
@@ -23,7 +25,9 @@ header .shake { transform: scale(1.2) translate(0, 0.1em); }
 /* Other header fields */
 data::before { content: attr(value); display: inline; }
 header input[type="file"], input[type="submit"] { position: absolute; width: 0.1px; height: 0.1px; margin-top: -1000vh; }
-input#paste_id { width: 20em; font: var(--codefnt); border: none; border-radius: 3px; padding: 3px; color: #fc3; background: black; }
+label { color: var(--site-highlight); }
+data#paste_id { color: var(--site-highlight); }
+input#paste_id { width: 20em; font: var(--codefnt); border: none; border-radius: 3px; padding: 3px; color: var(--site-highlight); background: black; }
 input#paste_id::placeholder { color: #666; }
 #notify {
     color: white;
@@ -35,16 +39,13 @@ input#paste_id::placeholder { color: #666; }
 }
 #notify.visible { opacity: 1; }
 /* Footer */
-footer { color: #666; text-align: justify; padding: 1rem; }
-footer a { color: #fc3; font-weight: bold; }
+footer { text-align: justify; padding: 1rem; }
+footer a { color: var(--site-highlight);font-weight: bold; }
 /* Remove some cruft when printing */
 @media print {
     @page { margin: 2cm 1cm; }
     html { font-size: 10pt; }
-    body { background: none; }
-    data { display: block; font: bold 2rem "Verdana", sans-serif; color: black; text-align: center; width: 100vw; }
+    body { background: none; color: initial; }
+    data#paste_id { display: block; font: bold 2rem "Verdana", sans-serif; color: black; text-align: center; width: 100vw; }
     header a, header label, header input, footer, #notify { display: none; }
-    .highlight .line::before {
-        font-size: 0.9rem;  /* Workaround some b0rkage with page feeds in Chrome */
-    }
 }
