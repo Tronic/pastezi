@@ -1,9 +1,4 @@
 @charset "UTF-8";
-:root {
-    --fontsz: 16;
-    --site-highlight: #fc3;
-    --site-background: #444;
-}
 /* Minimal CSS reset */
 * { margin: 0; padding: 0; outline: none; box-sizing: border-box; }
 /* Root font size is default (16px) for 960-1920px and scales proportionally outside this range */

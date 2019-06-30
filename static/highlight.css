@@ -1,6 +1,7 @@
 @charset "UTF-8";
 
 :root {
+    --fontsz: 16;
     --codefnt: 1rem/1.4 "Roboto Mono", monospace, "Noto Color Emoji";
     --tabsz: 3.7ch;  /* Slightly less than four spaces to b0rk invalid indentation */
     --tab-color: #8884;
@@ -10,6 +11,9 @@
 }
 /* Printing styles */
 :root {
+    --site-highlight: #fc3;
+    --site-color: black;
+    --site-background: none;
     --comment: grey;
     --number: #9a4;
     --string: #860;
@@ -20,6 +24,9 @@
 }
 @media screen {
     :root {
+        --site-highlight: #fc3;
+        --site-color: white;
+        --site-background: #444;
         --background: #222;
         --text: #ccc;
         --comment: #6A9955;
