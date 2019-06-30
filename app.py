@@ -47,6 +47,7 @@ async def post_paste(req):
     return redirect(app.url_for("view_paste", paste_id=paste_id), status=200+created)
 
 @app.put("/")
+@app.put("/p/")
 @app.put("/p/<paste_id>", name="put_paste")
 async def put_paste(req, paste_id=None):
     paste_id, paste_object = await content.process_paste(req.body, paste_id, fallback_charset=req.args.get("charset"))
