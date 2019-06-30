@@ -1,9 +1,6 @@
 @charset "UTF-8";
 :root {
     --fontsz: 16;
-    --codefnt: 1rem/1.5 "Roboto Mono", monospace, "Noto Color Emoji";
-    --tabsz: 3.7ch;  /* Slightly less than four spaces to b0rk invalid indentation */
-    --lineno-margin: 4ch;
 }
 /* Minimal CSS reset */
 * { margin: 0; padding: 0; outline: none; box-sizing: border-box; }
@@ -12,59 +9,22 @@ html { font-size: calc(var(--fontsz) * 1px); white-space: pre-wrap; }
 @media(max-width: 960px) { html { font-size: calc(var(--fontsz) / 960 * 100vw); } }
 @media(min-width: 1920px) { html { font-size: calc(var(--fontsz) / 1920 * 100vw); } }
 body { background: #444; color: #fc3; font: var(--codefnt); }
+/* Header buttons */
+header { transition: all 100ms; display: flex; align-items: center; }
+header [title] { width: 4rem; height: 4rem; background-position: 50%; background-size: 3rem 3rem; background-repeat: no-repeat; }
+header [title]:hover, header [title]:focus-within { transform: scale(1.2); outline: none; }
+header .shake { transform: scale(1.2) translate(0, 0.1em); }
 #new { background-image: url("paste.png"); }
 #open { background-image: url("open.png"); }
 #upload { background-image: url("upload.png"); }
 #copy { background-image: url("copy.png"); }
 #dl { background-image: url("dl.png"); }
 #edit { background-image: url("edit.png"); }
-footer { color: #666; text-align: justify; padding: 1rem; }
-footer a { color: #fc3; font-weight: bold; }
-::placeholder { color: #666; }
-header { transition: all 100ms; }
-header [title]:hover, header [title]:focus-within { transform: scale(1.2); outline: none; }
-.shake { transform: scale(1.2) translate(0, 0.1em); }
-header { display: flex; align-items: center; }
-header [title] { width: 4rem; height: 4rem; background-position: 50%; background-size: 3rem 3rem; background-repeat: no-repeat; }
-textarea, .CodeMirror {
-    width: 100vw;
-    min-height: 80vh;
-    font: var(--codefnt);
-}
-data::before {
-    content: attr(value);
-    display: inline; font-size: 1rem;
-}
+/* Other header fields */
+data::before { content: attr(value); display: inline; }
 header input[type="file"], input[type="submit"] { position: absolute; width: 0.1px; height: 0.1px; margin-top: -1000vh; }
 input#paste_id { width: 20em; font: var(--codefnt); border: none; border-radius: 3px; padding: 3px; color: #fc3; background: black; }
-.highlight { padding-left: var(--lineno-margin); padding-right: 1em; width: 100vw; }
-.highlight code {
-    width: 100%;
-    border-left: 1px solid #8888;
-    padding: 0.3em;
-    counter-reset: line;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    display: inline-block;
-    font-family: var(--codefnt);
-}
-/* Line numbers in /view */
-.highlight .line::before {
-    content: attr(id);
-    display: inline-block;
-    position: absolute;
-    left: 0;
-    text-align: right;
-    padding-right: 0.2em;
-    box-sizing: border-box;
-    width: var(--lineno-margin);
-    color: #999;
-    white-space: nowrap;
-}
-/* Hilight linked-to linenumber */
-.highlight .line:target::before {
-    color: #fc3;
-}
+input#paste_id::placeholder { color: #666; }
 #notify {
     color: white;
     font-weight: bold;
@@ -73,35 +33,18 @@ input#paste_id { width: 20em; font: var(--codefnt); border: none; border-radius:
     transition: opacity 200ms;
     opacity: 0;
 }
-#notify.visible {
-    opacity: 1;
-}
+#notify.visible { opacity: 1; }
+/* Footer */
+footer { color: #666; text-align: justify; padding: 1rem; }
+footer a { color: #fc3; font-weight: bold; }
 /* Remove some cruft when printing */
 @media print {
     @page { margin: 2cm 1cm; }
     html { font-size: 10pt; }
     body { background: none; }
-    h1 { font-size: 2rem; color: black; text-align: center; width: 100vw; }
+    data { display: block; font: bold 2rem "Verdana", sans-serif; color: black; text-align: center; width: 100vw; }
     header a, header label, header input, footer, #notify { display: none; }
-    .highlight a::before {
+    .highlight .line::before {
         font-size: 0.9rem;  /* Workaround some b0rkage with page feeds in Chrome */
     }
 }
-/* Visible tabs in codemirror */
-.cm-tab { font-size: 0; }
-.cm-tab::before {
-    display: inline-block;
-    width: var(--tabsz);
-    font-size: 1rem;
-    color: #444;
-    content: "⟼";
-    border-right: 1px solid #444;
-}
-code, textarea { tab-size: var(--tabsz); }
-/* Override base theme for editor and also specify for plain textarea */
-textarea, .cm-s-pastel-on-dark.CodeMirror {
-	background: #222;
-    color: #888;
-    border: none;
-}
-textarea { padding: 0.3em; }

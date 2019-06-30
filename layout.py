@@ -10,9 +10,8 @@ class Layout:
             """<meta name=viewport content="width=device-width, initial-scale=1">"""
             f"""<link rel=manifest href="{self.static("manifest.json")}">"""
             f"""<link rel=stylesheet href="{self.static("fonts.css")}">"""
-            f"""<link rel=stylesheet href="{self.static("highlight.css")}">"""
-            f"""<link rel=stylesheet href="{self.static("codemirror/theme/pastel-on-dark.css")}">"""
             f"""<link rel=stylesheet href="{self.static("codemirror/lib/codemirror.css")}">"""
+            f"""<link rel=stylesheet href="{self.static("highlight.css")}">"""
             f"""<link rel=stylesheet href="{self.static("style.css")}">"""
         )
         self.nav_start = f"""<header><a id=new title="New paste" href=/></a>"""
@@ -27,8 +26,9 @@ class Layout:
         text = escape(paste["text"]) if paste else ""
         head = f"""<form action="{self.url("post_paste")}" method=POST enctype=multipart/form-data>"""
         body = (
-            f"""<label id=open title="Open file"><input type=file name=paste></label>"""
-            f"""<label>Save as:<input id=paste_id name=paste_id value="{paste_id or ""}" placeholder=filename.txt """ """pattern="[^/]{3,}" autocomplete=off autofocus></label>"""
+            """<label id=open title="Open file"><input type=file name=paste></label>"""
+            f"""<label>Save as:<input id=paste_id name=paste_id placeholder="{paste_id or ""}" """
+            r"""pattern="[^/]{3,}" autocomplete=off autofocus></label>"""
             f"""<label id=upload title=Upload><input type=submit></label>"""
             """<data id=notify value=""></data></header>"""
             f"""<textarea id=paste name=paste>\n{text}</textarea></form>"""
