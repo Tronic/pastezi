@@ -46,7 +46,7 @@
     /* Dashed-underline errors; wavy doesn't work too well in Chrome */
     .cm-s-default span.cm-error, .highlight .err { text-decoration: underline dashed red; }
 }
-.highlight code, .CodeMirror {
+.highlight code, .CodeMirror, textarea {
     color: var(--text);
     background: var(--background);
 }
