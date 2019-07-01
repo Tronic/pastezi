@@ -1,5 +1,6 @@
 from sanic import Sanic
 from sanic.response import json, redirect, html, text, raw
+from sanic.exceptions import NotFound
 import mimetypes
 from pathlib import PurePosixPath
 from glob import glob
@@ -8,6 +9,7 @@ from . import content, layout, db
 import os
 
 app = Sanic(strict_slashes=True)
+app.error_handler.add(NotFound, lambda r, e: text(None, status=404))  # Quiet 404 errors, mostly for favicon.ico
 
 @app.listener('before_server_start')
 async def init(app, loop):
