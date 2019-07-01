@@ -33,7 +33,7 @@ input#paste_id::placeholder { color: #666; }
 }
 #notify.visible { opacity: 1; }
 /* Footer */
-footer { text-align: justify; padding: 1rem; }
+footer { text-align: right; padding: 1rem; font-size: 0.8rem; }
 footer a { color: var(--site-highlight);font-weight: bold; }
 /* Remove some cruft when printing */
 @media print {

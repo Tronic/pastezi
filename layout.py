@@ -6,7 +6,6 @@ class Layout:
         self.header1 = """<!DOCTYPE html><meta charset=UTF-8><title>"""
         self.header2 = (
             f"""</title><link rel=icon href="{self.static("paste.png")}">"""
-            """<meta name=description content="A pastebin that doesn't suck.">"""
             """<meta name=viewport content="width=device-width, initial-scale=1">"""
             f"""<link rel=manifest href="{self.static("manifest.json")}">"""
             f"""<link rel=stylesheet href="{self.static("fonts.css")}">"""
@@ -32,9 +31,9 @@ class Layout:
             f"""<label id=upload title=Upload><input type=submit></label>"""
             """<data id=notify value=""></data></header>"""
             f"""<textarea id=paste name=paste>\n{text}</textarea></form>"""
-            """<footer><a href="https://github.com/Tronic/pastezi">Pastezi</a></footer>"""
+            """<footer><a href="https://github.com/Tronic/pastezi">Pastezi</a> - a pastebin that doesn't suck!</footer>"""
         )
-        return self(body, head, title=paste_id or "Pastezi")
+        return self(body, head, title=paste_id or "New Paste")
 
     def view_paste(self, paste, paste_id):
         body = f"""<data id=paste_id value="{paste_id}"></data>"""
