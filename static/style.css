@@ -2,7 +2,7 @@
 /* Minimal CSS reset */
 * { margin: 0; padding: 0; outline: none; box-sizing: border-box; }
 /* Root font size is default (16px) for 960-1920px and scales proportionally outside this range */
-html { font-size: calc(var(--fontsz) * 1px); white-space: pre-wrap; }
+html { font-size: calc(var(--fontsz) * 1px); white-space: pre-wrap; color: var(--site-color); }
 @media(max-width: 960px) { html { font-size: calc(var(--fontsz) / 960 * 100vw); } }
 @media(min-width: 1920px) { html { font-size: calc(var(--fontsz) / 1920 * 100vw); } }
 body { background: var(--site-background); font: var(--codefnt); }
@@ -25,7 +25,6 @@ data#paste_id { color: var(--site-highlight); }
 input#paste_id { width: 20em; font: var(--codefnt); border: none; border-radius: 3px; padding: 3px; color: var(--site-highlight); background: black; }
 input#paste_id::placeholder { color: #666; }
 #notify {
-    color: white;
     font-weight: bold;
     text-align: center;
     text-shadow: 0 0 5px black;
