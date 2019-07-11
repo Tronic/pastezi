@@ -26,7 +26,7 @@ const notify = msg => {
     console.log("Notify: ", msg)
     elem.value = msg
     elem.classList.add("visible")
-    notify_timeout = setTimeout(() => elem.classList.remove("visible"), 2000)
+    notify_timeout = setTimeout(() => elem.classList.remove("visible"), 3000)
 }
 
 const shake = button_selector => {
