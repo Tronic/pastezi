@@ -2,12 +2,12 @@
     "name": "Pastezi",
     "description": "A pastebin that doesn't suck.",
     "icons": [
-        { "src": "/paste.png", "type": "image/png", "sizes": "100x100" },
-        { "src": "/paste-512.png", "type": "image/png", "sizes": "512x512" }
+        {"src": "/icons/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png"},
+        {"src": "/icons/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png"}
     ],
-    "start_url": "/",
-    "background_color": "#333",
-    "display": "standalone",
     "theme_color": "#fc3",
+    "background_color": "#333",
+    "start_url": "/",
+    "display": "standalone",
     "permissions": [ "clipboardRead", "clipboardWrite", "downloads" ]
 }

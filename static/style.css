@@ -11,12 +11,12 @@ header { transition: all 100ms; display: flex; align-items: center; }
 header [title] { width: 4rem; height: 4rem; background-position: 50%; background-size: 3rem 3rem; background-repeat: no-repeat; }
 header [title]:hover, header [title]:focus-within { transform: scale(1.2); outline: none; }
 header .shake { transform: scale(1.2) translate(0, 0.1em); }
-#new { background-image: url("paste.png"); }
-#open { background-image: url("open.png"); }
-#upload { background-image: url("upload.png"); }
-#copy { background-image: url("copy.png"); }
-#dl { background-image: url("dl.png"); }
-#edit { background-image: url("edit.png"); }
+#new { background-image: url("/icons/paste.svg"); }
+#open { background-image: url("/icons/open.svg"); }
+#upload { background-image: url("/icons/upload.svg"); }
+#copy { background-image: url("/icons/copy.svg"); }
+#dl { background-image: url("/icons/dl.svg"); }
+#edit { background-image: url("/icons/edit.svg"); }
 /* Other header fields */
 data::before { content: attr(value); display: inline; }
 header input[type="file"], input[type="submit"] { position: absolute; width: 0.1px; height: 0.1px; margin-top: -1000vh; }
@@ -30,6 +30,9 @@ input#paste_id::placeholder { color: #666; }
     text-shadow: 0 0 5px black;
     transition: opacity 200ms;
     opacity: 0;
+}
+main {
+    padding-right: 1ch;
 }
 #notify.visible { opacity: 1; }
 /* Footer */

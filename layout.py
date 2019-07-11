@@ -5,13 +5,22 @@ class Layout:
         self.url = app.url_for
         self.header1 = """<!DOCTYPE html><meta charset=UTF-8><title>"""
         self.header2 = (
-            f"""</title><link rel=icon href="{self.static("paste.png")}">"""
+            """</title>"""
             """<meta name=viewport content="width=device-width, initial-scale=1">"""
-            f"""<link rel=manifest href="{self.static("manifest.json")}">"""
             f"""<link rel=stylesheet href="{self.static("fonts.css")}">"""
             f"""<link rel=stylesheet href="{self.static("codemirror/lib/codemirror.css")}">"""
             f"""<link rel=stylesheet href="{self.static("highlight.css")}">"""
             f"""<link rel=stylesheet href="{self.static("style.css")}">"""
+            f"""<link rel=manifest href="/manifest.json">"""
+            """<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">"""
+            """<link rel="icon" type="image/svg" sizes="32x32" href="/icons/favicon-32x32.png">"""
+            """<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">"""
+            """<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">"""
+            """<link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#ffcc33">"""
+            """<link rel="shortcut icon" href="/icons/favicon.ico">"""
+            """<meta name="msapplication-TileColor" content="#ffcc33">"""
+            """<meta name="msapplication-config" content="/icons/browserconfig.xml">"""
+            """<meta name="theme-color" content="#ffcc33">"""
         )
         self.nav_start = f"""<header><a id=new title="New paste" href=/></a>"""
         scripts = "script.js", "codemirror/lib/codemirror.js", "codemirror/mode/meta.js", "codemirror/addon/mode/loadmode.js"
@@ -29,8 +38,9 @@ class Layout:
             f"""<label>Save as:<input id=paste_id name=paste_id placeholder="{paste_id or ""}" """
             r"""pattern="[^/]{3,}" autocomplete=off autofocus></label>"""
             f"""<label id=upload title=Upload><input type=submit></label>"""
-            """<data id=notify value=""></data></header>"""
-            f"""<textarea id=paste name=paste>\n{text}</textarea></form>"""
+            """<data id=notify value=""></data></header><main>"""
+            f"""<textarea id=paste name=paste>\n{text}</textarea>"""
+            """</main></form>"""
             """<footer><a href="https://github.com/Tronic/pastezi">Pastezi</a> - a pastebin that doesn't suck!</footer>"""
         )
         return self(body, head, title=paste_id or "New Paste")
@@ -42,6 +52,7 @@ class Layout:
             f"""<a id=dl title=Download href="{self.url("get_paste", paste_id=paste_id)}"></a>"""
         )
         body += f"""<a id=edit title=Edit href="{self.url("edit_paste", paste_id=paste_id)}"></a>"""
-        body += """<data id=notify value=""></data></header>"""
+        body += """<data id=notify value=""></data></header><main>"""
         body += paste["html"] if paste else f"<p>{paste_id} not found. This paste may have been deleted or you got the address wrong."
+        body += "</main>"
         return self(body, title=paste_id or "Pastezi")

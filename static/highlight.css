@@ -49,6 +49,7 @@
 .highlight code, .CodeMirror, textarea {
     color: var(--text);
     background: var(--background);
+    border-radius: 0.2em;
 }
 
 .cm-s-default div.CodeMirror-selected { background: #264f78; }
@@ -80,12 +81,11 @@
 .cm-s-default span.cm-bracket { color: var(--bracket); font-weight: bold; }
 
 /* Code view */
-.highlight { padding-left: var(--lineno-margin); padding-right: 1em; width: 100vw; }
+.highlight { padding-left: var(--lineno-margin); width: 100%; }
 .highlight code {
     width: 100%;
-    border-left: 1px solid var(--lineno-color);
     padding: 0.3em;
-    counter-reset: line;
+    border-radius: 0.2em;
     white-space: pre-wrap;
     word-wrap: break-word;
     display: inline-block;
@@ -110,7 +110,7 @@
 .highlight .line:target::before { font-weight: bold; color: var(--lineno-highlight); }
 /* Code editor */
 textarea, .CodeMirror {
-    width: 100vw;
+    width: 100%;
     min-height: 80vh;
     font: var(--codefnt);
 }
@@ -130,6 +130,10 @@ textarea { padding: 0.3em; border: none; }
 @media print {
     .highlight .line::before {
         font-size: 0.9rem;  /* Workaround some b0rkage with page feeds in Chrome */
+    }
+    .highlight code {
+        border-left: 0.5pt solid var(--lineno-color);
+        border-radius: 0;
     }
     .cm-s-default .CodeMirror-gutters { display: none; }
 }
