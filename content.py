@@ -54,7 +54,7 @@ def prettyprint(paste, paste_id):
     return pygments.highlight(paste, lexer, formatter)
 
 def decode(text: bytes, fallback_charset: str = None) -> str:
-    """Decode with charset autodetection."""
+    """Decode with charset autodetection. Removes Unicode BOMs automatically."""
     # Unicode strings with BOMs
     boms = (b"\xEF\xBB\xBF", "UTF-8"), (b"\xFF\xFE", "UTF-16LE"), (b"\xFE\xFF", "UTF-16BE"), (b"\xFF\xFE\0\0", "UTF-32LE"), (b"\0\0\xFE\xFF", "UTF-32BE")
     for bom, charset in boms:
@@ -64,9 +64,13 @@ def decode(text: bytes, fallback_charset: str = None) -> str:
     except UnicodeDecodeError: pass
     # If fallback is provided, just use that
     if fallback_charset: return text.decode(fallback_charset, errors="replace")
-    # 8-bit guesswork (NUL usually means binary file; CP437 umlauts are more likely than ISO-8859-1 extended control chars)
-    if 0 in text: raise UnicodeDecodeError("Binary files are not supported!")
-    return text.decode("CP437" if any(0x80 <= ch < 0xA0 for ch in text) and b"\r\n" in text else "ISO-8859-1")
+    # 8-bit guesswork
+    # - NUL usually means binary data (could be actual NUL or UTF-16/32 w/o BOM, but all those are rare)
+    if 0 in text: raise UnicodeDecodeError("Looks like binary data")
+    # - With CR/LF line terminators, CP437 umlauts are more likely than ISO-8859-1 extended control chars
+    if any(0x80 <= ch < 0xA0 for ch in text) and b"\r\n" in text: return text.decode("CP437")
+    # - The most common 8-bit encoding is a reasonable final fallback
+    return text.decode("ISO-8859-1")
 
 @make_async
 def process_paste(paste, paste_id, fallback_charset = None):
