@@ -5,7 +5,8 @@ import mimetypes
 from pathlib import PurePosixPath
 from glob import glob
 from .helper import make_async
-from . import content, layout, db
+from . import content, db
+from .layout import Layout
 import os
 
 app = Sanic(strict_slashes=True)
@@ -23,7 +24,10 @@ def finish(app, loop):
 @app.get("/", name="index")
 @app.get(f"/p/<paste_id>/edit")
 async def edit_paste(req, paste_id=None):
+    print(req.url_for("view_paste", paste_id="foo"), app.url_for("view_paste", paste_id="foo", _external=True))
+    print(req.forwarded)
     paste = paste_id and await backend[paste_id]
+    layout = Layout(req)
     return html(layout.edit_paste(paste, paste_id))
 
 @app.get(f"/p/<paste_id>")
@@ -36,6 +40,7 @@ async def get_paste(req, paste_id):
 @app.get(f"/p/<paste_id>/view")
 async def view_paste(req, paste_id):
     paste = await backend[paste_id]
+    layout = Layout(req)
     if paste: return html(layout.view_paste(paste, paste_id))
     return html(layout.view_paste(None, paste_id), status=404)
 
@@ -54,7 +59,7 @@ async def post_paste(req):
 async def put_paste(req, paste_id=None):
     paste_id, paste_object = await content.process_paste(req.body, paste_id, fallback_charset=req.args.get("charset"))
     created = await backend.store(paste_id, paste_object)
-    return text(app.url_for("view_paste", paste_id=paste_id, _external=True) + "\n", status=200+created)
+    return text(req.url_for("view_paste", paste_id=paste_id) + "\n", status=200+created)
 
 @app.delete(f"/p/<paste_id>", name="delete")
 async def delete_paste(req, paste_id):
@@ -62,5 +67,4 @@ async def delete_paste(req, paste_id):
 
 staticdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "static")
 app.static("/", staticdir)
-layout = layout.Layout(app)
 backend = db.Backend()

@@ -1,8 +1,8 @@
 from html import escape
 
 class Layout:
-    def __init__(self, app):
-        self.url = app.url_for
+    def __init__(self, req):
+        self.url = req.url_for
         self.header1 = """<!DOCTYPE html><meta charset=UTF-8><title>"""
         self.header2 = (
             """</title>"""
@@ -11,20 +11,20 @@ class Layout:
             f"""<link rel=stylesheet href="{self.static("codemirror/lib/codemirror.css")}">"""
             f"""<link rel=stylesheet href="{self.static("highlight.css")}">"""
             f"""<link rel=stylesheet href="{self.static("style.css")}">"""
-            f"""<link rel=manifest href="/manifest.json">"""
-            """<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">"""
-            """<link rel="icon" type="image/svg" sizes="32x32" href="/icons/favicon-32x32.png">"""
-            """<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">"""
-            """<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">"""
-            """<link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#ffcc33">"""
-            """<link rel="shortcut icon" href="/icons/favicon.ico">"""
-            """<meta name="msapplication-TileColor" content="#ffcc33">"""
-            """<meta name="msapplication-config" content="/icons/browserconfig.xml">"""
-            """<meta name="theme-color" content="#ffcc33">"""
+            f"""<link rel=manifest href="{self.static("manifest.json")}"">"""
+            f"""<link rel="apple-touch-icon" sizes="180x180" href="{self.static("icons/apple-touch-icon.png")}">"""
+            f"""<link rel="icon" type="image/svg" sizes="32x32" href="{self.static("icons/favicon-32x32.png")}">"""
+            f"""<link rel="icon" type="image/png" sizes="32x32" href="{self.static("icons/favicon-32x32.png")}">"""
+            f"""<link rel="icon" type="image/png" sizes="16x16" href="{self.static("icons/favicon-16x16.png")}">"""
+            f"""<link rel="mask-icon" href="{self.static("icons/safari-pinned-tab.svg")}" color="#ffcc33">"""
+            f"""<link rel="shortcut icon" href="{self.static("icons/favicon.ico")}">"""
+            f"""<meta name="msapplication-TileColor" content="#ffcc33">"""
+            f"""<meta name="msapplication-config" content="{self.static("icons/browserconfig.xml")}">"""
+            f"""<meta name="theme-color" content="#ffcc33">"""
         )
         self.nav_start = f"""<header><a id=new title="New paste" href=/></a>"""
         scripts = "script.js", "codemirror/lib/codemirror.js", "codemirror/mode/meta.js", "codemirror/addon/mode/loadmode.js"
-        for s in scripts: self.header2 += f"""<script src="{self.url("static", filename=s)}"></script>"""
+        for s in scripts: self.header2 += f"""<script src="{self.static(s)}"></script>"""
     def static(self, filename): return self.url("static", filename=filename)
 
     def __call__(self, body, head = "", title = ""):
