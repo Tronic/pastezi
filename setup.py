@@ -29,7 +29,9 @@ setup(
         "pygments",
         "metaphone",
         "nltk",
+        "pronounceable",
     ],
+    package_data={"": ["static/**"]},
     include_package_data = True,
 )
 

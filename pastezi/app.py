@@ -1,16 +1,18 @@
-from sanic import Sanic
-from sanic.response import json, redirect, html, text, raw
-from sanic.exceptions import NotFound
 import mimetypes
-from pathlib import PurePosixPath
-from glob import glob
-from .helper import make_async
-from . import content, db
-from .layout import Layout
 import os
+from glob import glob
+from pathlib import PurePosixPath
 
-app = Sanic(strict_slashes=True)
-app.error_handler.add(NotFound, lambda r, e: text(None, status=404))  # Quiet 404 errors, mostly for favicon.ico
+from sanic import Sanic
+from sanic.exceptions import NotFound
+from sanic.log import logging
+from sanic.response import empty, html, json, raw, redirect, text
+
+from . import content, db
+from .helper import make_async
+from .layout import Layout
+
+app = Sanic("pastezi", strict_slashes=True)
 
 @app.listener('before_server_start')
 async def init(app, loop):
@@ -24,8 +26,6 @@ def finish(app, loop):
 @app.get("/", name="index")
 @app.get(f"/p/<paste_id>/edit")
 async def edit_paste(req, paste_id=None):
-    print(req.url_for("view_paste", paste_id="foo"), app.url_for("view_paste", paste_id="foo", _external=True))
-    print(req.forwarded)
     paste = paste_id and await backend[paste_id]
     layout = Layout(req)
     return html(layout.edit_paste(paste, paste_id))
@@ -46,6 +46,7 @@ async def view_paste(req, paste_id):
 
 @app.post("/")
 async def post_paste(req):
+    await req.receive_body()
     paste, paste_id = req.form.get("paste"), req.form.get("paste_id")
     if not paste and "paste" in req.files:
         mime, paste, paste_id = req.files["paste"][0]
@@ -57,13 +58,15 @@ async def post_paste(req):
 @app.put("/p/")
 @app.put("/p/<paste_id>", name="put_paste")
 async def put_paste(req, paste_id=None):
+    await req.receive_body()
     paste_id, paste_object = await content.process_paste(req.body, paste_id, fallback_charset=req.args.get("charset"))
     created = await backend.store(paste_id, paste_object)
     return text(req.url_for("view_paste", paste_id=paste_id) + "\n", status=200+created)
 
-@app.delete(f"/p/<paste_id>", name="delete")
+@app.delete("/p/<paste_id>", name="delete")
 async def delete_paste(req, paste_id):
-    return text(None, status=204 if await backend.delete(paste_id) else 404)
+    deleted = await backend.delete(paste_id)
+    return empty(204 if deleted else 404)
 
 staticdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "static")
 app.static("/", staticdir)
