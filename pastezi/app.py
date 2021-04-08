@@ -45,7 +45,7 @@ async def view_paste(req, paste_id):
     return html(layout.view_paste(None, paste_id), status=404)
 
 def get_url(req, paste_id):
-    view = req.args.get("view", "1") == "0"
+    view = req.args.get("view", "1") == "1"
     return req.url_for("view_paste" if view else "get_paste", paste_id=paste_id)
 
 @app.post("/")
