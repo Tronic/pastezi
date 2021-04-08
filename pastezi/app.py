@@ -44,6 +44,10 @@ async def view_paste(req, paste_id):
     if paste: return html(layout.view_paste(paste, paste_id))
     return html(layout.view_paste(None, paste_id), status=404)
 
+def get_url(req, paste_id):
+    view = req.args.get("view", "1") == "0"
+    return req.url_for("view_paste" if view else "get_paste", paste_id=paste_id)
+
 @app.post("/")
 async def post_paste(req):
     await req.receive_body()
@@ -52,7 +56,12 @@ async def post_paste(req):
         mime, paste, paste_id = req.files["paste"][0]
     paste_id, paste_object = await content.process_paste(paste, paste_id, fallback_charset=req.args.get("charset"))
     created = await backend.store(paste_id, paste_object)
-    return redirect(app.url_for("view_paste", paste_id=paste_id), status=200+created)
+    url = get_url(req, paste_id)
+    if "text/html" in req.headers.getone("accept", "*/*"):
+        return redirect(url)
+    else:
+        status = 201 if created else 200
+        return text(f"{url}\n", status=status)
 
 @app.put("/")
 @app.put("/p/")
@@ -61,7 +70,8 @@ async def put_paste(req, paste_id=None):
     await req.receive_body()
     paste_id, paste_object = await content.process_paste(req.body, paste_id, fallback_charset=req.args.get("charset"))
     created = await backend.store(paste_id, paste_object)
-    return text(req.url_for("view_paste", paste_id=paste_id) + "\n", status=200+created)
+    status = 201 if created else 200
+    return text(f"{get_url(req, paste_id)}\n", status=status)
 
 @app.delete("/p/<paste_id>", name="delete")
 async def delete_paste(req, paste_id):

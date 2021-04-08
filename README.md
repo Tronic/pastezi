@@ -14,6 +14,11 @@ Use PUT request to send files without browser: (the new URL is returned)
 
     curl https://paste.zi.fi/ -T your_file.txt
 
+Use POST request to keep the original filename, e.g. to transfer a file:
+
+    curl https://paste.zi.fi/ -F paste=@your_file.txt
+    wget https://paste.zi.fi/p/your_file.txt
+
 No access control. Anyone may edit or delete pastes, if they have the URL. If no filename is provided, a random name is created.
 
 Pastes are preserved for a week since last edit or view.
