@@ -21,4 +21,4 @@ Use POST request to keep the original filename, e.g. to transfer a file:
 
 No access control. Anyone may edit or delete pastes, if they have the URL. If no filename is provided, a random name is created.
 
-Pastes are preserved for a week since last edit or view.
+Pastes are deleted after six weeks without views, or when edited to empty content.
