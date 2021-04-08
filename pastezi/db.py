@@ -4,7 +4,7 @@ import json
 
 class Backend:
     def __init__(self):
-        self.expiration = 7 * 86400.0  # A week
+        self.expiration = 6 * 7 * 86400.0  # Six weeks
 
     async def start(self, loop):
         self.ns = "pastezi:"
