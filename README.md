@@ -16,8 +16,10 @@ Pastes are deleted after six weeks without views, or when edited to empty conten
 
 ## Scriptable API
 
-PUT request to site root creates a randomly named paste, while PUT request to full URL (with filename) creates or modifies that paste. HTTP status 201 is given if the paste didn't exist before. Add `?view=0` to have a download URL returned instead of the one for viewing in browser, or alternatively strip the `/view` part at the end afterwards.
+A PUT request to site root creates a randomly named paste, while a PUT request to full URL (with filename) creates or modifies that paste. HTTP 201 Created is given if the paste didn't exist before. Add `?view=0` to have a download URL returned instead of the one for viewing in browser, or alternatively strip the `/view` part at the end afterwards.
 
     curl https://paste.zi.fi/ -X PUT -d "text to paste"
     curl https://paste.zi.fi/p/ -T your_file.txt
     wget https://paste.zi.fi/p/your_file.txt
+
+Notice that binary files are not supported and that trailing newlines and such may get altered.

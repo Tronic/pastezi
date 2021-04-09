@@ -66,7 +66,7 @@ def decode(text: bytes, fallback_charset: str = None) -> str:
     if fallback_charset: return text.decode(fallback_charset, errors="replace")
     # 8-bit guesswork
     # - NUL usually means binary data (could be actual NUL or UTF-16/32 w/o BOM, but all those are rare)
-    if 0 in text: raise UnicodeDecodeError("Looks like binary data")
+    if 0 in text: raise InvalidUsage("Looks like binary data")
     # - With CR/LF line terminators, CP437 umlauts are more likely than ISO-8859-1 extended control chars
     if any(0x80 <= ch < 0xA0 for ch in text) and b"\r\n" in text: return text.decode("CP437")
     # - The most common 8-bit encoding is a reasonable final fallback
@@ -75,6 +75,7 @@ def decode(text: bytes, fallback_charset: str = None) -> str:
 @make_async
 def process_paste(paste, paste_id, fallback_charset = None):
     if isinstance(paste, bytes): paste = decode(paste, fallback_charset)
+    elif paste is None: raise InvalidUsage("Malformed request (no paste found)")
     elif paste[0] == "\uFEFF": paste = paste[1:]  # Remove Unicode BOM
     paste = paste.replace("\r\n", "\n")
     if not paste.strip(): raise InvalidUsage("Empty paste (no data found)")
