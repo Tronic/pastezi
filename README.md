@@ -10,13 +10,12 @@ An attempt to create a pastebin site that does not suck. https://paste.zi.fi/
 * No extra cruft gets copied (even by Ctrl+A) or printed
 * Implemented with [Sanic](https://sanic.readthedocs.io/) and [Redis](https://redis.io/) in async Python for insanely high performance
 
-Use PUT request to send files without browser: (the new URL is returned)
+Use PUT request to send files without browser:
 
     curl https://paste.zi.fi/ -T your_file.txt
 
-Use POST request to keep the original filename, e.g. to transfer a file:
+An URL for viewing in browser is returned. For direct download, remove the `/view` part at the end of the URL (or add `?view=0` to PUT URL so that it returns this):
 
-    curl https://paste.zi.fi/ -F paste=@your_file.txt
     wget https://paste.zi.fi/p/your_file.txt
 
 No access control. Anyone may edit or delete pastes, if they have the URL. If no filename is provided, a random name is created.
