@@ -1,7 +1,12 @@
-from .app import app
-import os
+import sys
 
-debug = os.getenv("DEBUG", "") == "1"
-app.config.SERVER_NAME = "http://localhost:8080" if debug else "https://paste.zi.fi"
-app.config.REQUEST_MAX_SIZE = 100_000
-app.run(host="127.0.0.1", port=8080, debug=debug, access_log=False)
+print("""\
+Please run with Sanic CLI, not as a module!
+
+# Using Sanic stand-alone server (with your certificates)
+sanic --host 0.0.0.0 --port 443 --tls /etc/letsencrypt/live/paste.zi.fi
+
+# Locally/proxied (set SANIC_SERVER_NAME to public URL with no trailing slash)
+SANIC_SERVER_NAME="https://paste.zi.fi" sanic --port 8000 pastezi:app
+""")
+sys.exit(1)
