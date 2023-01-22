@@ -12,11 +12,11 @@ An attempt to create a pastebin site that does not suck. https://paste.zi.fi/
 
 No access control. Anyone may edit or delete pastes, if they have the URL. If no filename is provided, a random name is created.
 
-Pastes are deleted after six weeks without views, or when edited to empty content.
+Pastes are deleted after one year without views, or when re-uploaded with empty content.
 
 ## Scriptable API
 
-A PUT request to site root creates a randomly named paste, while a PUT request to full URL (with filename) creates or modifies that paste. HTTP 201 Created is given if the paste didn't exist before. Add `?view=0` to have a download URL returned instead of the one for viewing in browser, or alternatively strip the `/view` part at the end afterwards.
+A PUT request to site root creates a randomly named paste, while a PUT request to full URL (with filename) creates or modifies that paste. HTTP 201 Created is given if the paste didn't exist before. The URL of the paste will be returned (for viewing in browser or raw curl/wget/fetch).
 
     curl https://paste.zi.fi/ -X PUT -d "text to paste"
     curl https://paste.zi.fi/p/ -T your_file.txt
