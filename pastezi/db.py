@@ -6,7 +6,7 @@ class Backend:
     def __init__(self):
         self.expiration = 6 * 7 * 86400.0  # Six weeks
 
-    async def start(self, loop):
+    async def start(self):
         self.ns = "pastezi:"
         loop = asyncio.get_event_loop()
         self.redis = await aioredis.create_redis_pool('redis://localhost', minsize=5, maxsize=10, loop=loop, encoding="UTF-8")

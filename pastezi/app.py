@@ -1,7 +1,7 @@
 import mimetypes
 import os
 from glob import glob
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 
 from sanic import Sanic
 from sanic.exceptions import NotFound
@@ -14,14 +14,13 @@ from .layout import Layout
 
 app = Sanic("pastezi", strict_slashes=True)
 
-@app.listener('before_server_start')
-async def init(app, loop):
-    await backend.start(loop)
+@app.before_server_start
+async def init(app):
+    await backend.start()
 
-@app.listener('after_server_stop')
-def finish(app, loop):
-    loop.run_until_complete(backend.close())
-    loop.close()
+@app.after_server_stop
+async def finish(app):
+    await backend.close()
 
 @app.get("/", name="index")
 @app.get(f"/p/<paste_id>/edit")
@@ -63,8 +62,8 @@ async def post_paste(req):
         status = 201 if created else 200
         return text(f"{url}\n", status=status)
 
-@app.put("/")
-@app.put("/p/")
+@app.put("/", name="put_paste_root")
+@app.put("/p/", name="put_paste_noid")
 @app.put("/p/<paste_id>", name="put_paste")
 async def put_paste(req, paste_id=None):
     await req.receive_body()
@@ -78,6 +77,9 @@ async def delete_paste(req, paste_id):
     deleted = await backend.delete(paste_id)
     return empty(204 if deleted else 404)
 
-staticdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "static")
+staticdir = Path(__file__).resolve().parent.parent / "static"
+if not staticdir.is_dir():
+    raise RuntimeError(f"Static files not found in {staticdir}")
+
 app.static("/", staticdir)
 backend = db.Backend()
