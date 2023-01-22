@@ -3,7 +3,7 @@ import aioredis
 
 class Backend:
     def __init__(self):
-        self.expiration = 6 * 7 * 86400.0  # Six weeks
+        self.expiration = 6 * 7 * 86400  # Six weeks
 
     async def start(self):
         self.ns = "pastezi:"
@@ -23,7 +23,7 @@ class Backend:
     async def store(self, id, value):
         id = self.ns + id
         created = not await self.redis.exists(id)
-        await self.redis.hmset_dict(id, value)
+        await self.redis.hset(id, mapping=value)
         await self.redis.expire(id, self.expiration)
         return created
 
