@@ -10,6 +10,8 @@ from .layout import Layout
 
 app = Sanic("pastezi", strict_slashes=True)
 
+app.config.REQUEST_MAX_SIZE = 1_000_000
+
 staticdir = Path(__file__).resolve().parent.parent / "static"
 if not staticdir.is_dir():
     raise RuntimeError(f"Static files not found in {staticdir}")
