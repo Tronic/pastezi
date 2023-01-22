@@ -1,6 +1,5 @@
 import asyncio
 import aioredis
-import json
 
 class Backend:
     def __init__(self):
@@ -9,7 +8,7 @@ class Backend:
     async def start(self):
         self.ns = "pastezi:"
         loop = asyncio.get_event_loop()
-        self.redis = await aioredis.create_redis_pool('redis://localhost', minsize=5, maxsize=10, loop=loop, encoding="UTF-8")
+        self.redis = await aioredis.from_url('redis://localhost', decode_responses=True)
 
     async def close(self):
         self.redis.close()

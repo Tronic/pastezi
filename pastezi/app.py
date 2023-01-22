@@ -1,15 +1,10 @@
 import mimetypes
-import os
-from glob import glob
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 
 from sanic import Sanic
-from sanic.exceptions import NotFound
-from sanic.log import logging
-from sanic.response import empty, html, json, raw, redirect, text
+from sanic.response import empty, html, redirect, text
 
 from . import content, db
-from .helper import make_async
 from .layout import Layout
 
 app = Sanic("pastezi", strict_slashes=True)
