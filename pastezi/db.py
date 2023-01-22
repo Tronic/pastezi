@@ -3,7 +3,7 @@ import aioredis
 
 class Backend:
     def __init__(self):
-        self.expiration = 6 * 7 * 86400  # Six weeks
+        self.expiration = 365 * 86400  # One year
 
     async def start(self):
         self.ns = "pastezi:"
