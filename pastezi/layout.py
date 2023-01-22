@@ -35,7 +35,7 @@ class Layout:
         head = f"""<form action="{self.url("post_paste")}" method=POST enctype=multipart/form-data>"""
         body = (
             """<label id=open title="Open file"><input type=file name=paste></label>"""
-            f"""<label>Save as:<input id=paste_id name=paste_id placeholder="{paste_id or ""}" """
+            f"""<label>Save as:<input id=paste_id name=paste_id value="{escape(paste_id or '')}" placeholder="filename.txt (optional)" """
             r"""pattern="[^/]{3,}" autocomplete=off autofocus></label>"""
             f"""<label id=upload title=Upload><input type=submit></label>"""
             """<data id=notify value=""></data></header><main>"""
@@ -49,7 +49,7 @@ class Layout:
         body = f"""<data id=paste_id value="{paste_id}"></data>"""
         if paste: body += (
             f"""<a id=copy title="Copy all" href="javascript:copy_all_without_formatting()"></a>"""
-            f"""<a id=dl title=Download href="{self.url("get_paste", paste_id=paste_id)}"></a>"""
+            f"""<a id=dl title=Download href="{self.url("download_paste", paste_id=paste_id)}"></a>"""
         )
         body += f"""<a id=edit title=Edit href="{self.url("edit_paste", paste_id=paste_id)}"></a>"""
         body += """<data id=notify value=""></data></header><main>"""

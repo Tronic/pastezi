@@ -40,6 +40,7 @@ let editor, textarea, idinput, fileinput
 window.addEventListener("load", () => {
     const flash = sessionStorage.getItem("flash")
     if (flash) { sessionStorage.removeItem("flash"); notify(flash) }
+    document.getElementById("new").onclick = newPaste
     idinput = document.querySelector("input#paste_id")
     if (!idinput) return  /* Viewing paste, not editing */
     document.querySelector("form").addEventListener("submit", send_paste)
@@ -54,16 +55,34 @@ window.addEventListener("load", () => {
     fileinput.addEventListener("change", fileOpen)
     idinput.addEventListener("change", updateMode)
     updateMode()
-    /* Automatic paste in Chrome */
-    if (navigator.clipboard.readText && get().length === 0) {
-        notify("Shall I auto-paste into the editor?")
-        navigator.clipboard.readText().then(text => {
-            if (text.startsWith(location.origin) || text.trim().length === 0) return notify()
-            set(text)
-            notify(" ⃪ click to upload auto-pasted text")
-        }).catch(e => notify())
-    }
 })
+
+const newPaste = ev => {
+    if (!idinput || get().trim().length > 0) return  // Follow A href to the front page
+    // Already on edit page with empty editor, attempt auto-paste instead
+    ev.preventDefault()
+    autoPaste()
+}
+
+const autoPaste = async () => {
+    // This presumably only works on Chrome-based browsers and we let if fail on others
+    const p = await navigator.permissions.query({name: 'clipboard-read', allowWithoutGesture: false})
+    console.log("Clipboard read permission:", p.state)
+    if (p.state !== "granted") {
+        notify("Clipboard permission needed to paste in editor (only locally)")
+        p.onchange = autoPaste
+        if (p.state === "prompt") {
+            // Try getting it after a while so the user sees the notify first
+            setTimeout(async () => await navigator.clipboard.readText(), 2000)
+        }
+        return
+    }
+    // Should be fine to get it now
+    const text = await navigator.clipboard.readText()
+    if (text.trim().length === 0) return
+    set(text)
+    notify(" ⃪ click to upload pasted text")
+}
 
 document.addEventListener('dragover', ev => ev.preventDefault())
 const get = () => (editor ? editor.getValue() : textarea.value)
@@ -78,7 +97,7 @@ const send_paste_async = async () => {
     shake("#upload")
     const text = get();
     const has_text = text.trim().length > 0
-    const paste_id = idinput.value.trim() || idinput.placeholder
+    const paste_id = idinput.value.trim()
     if (!has_text && paste_id.length === 0) return notify("Write some text in the box first!")
     const res = await fetch("/p/" + encodeURIComponent(paste_id), {
         method: has_text ? "PUT" : "DELETE",
@@ -155,7 +174,7 @@ const loadFile = async file => {
 
 const updateMode = () => {
     if (!editor) return
-    const name = (idinput.value || idinput.placeholder).toLowerCase()
+    const name = idinput.value.toLowerCase()
     const {mode} = CodeMirror.findModeByFileName(name) || {mode: "null"}
     editor.setOption("mode", mode)
     CodeMirror.autoLoadMode(editor, mode)
