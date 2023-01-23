@@ -2,8 +2,8 @@
 
 An attempt to create a pastebin site that does not suck. https://paste.zi.fi/
 
-* Auto-paste into textbox (if you give permission)
-* Auto-copy of link after saving
+* The front page allows a new paste or loading existing ones by name
+* Auto-copy of link after uploading a paste
 * The usual keyboard shortcuts for save/open/copy/print
 * Syntax hilight for editor and viewer
 * Autodetection by file extension and content
