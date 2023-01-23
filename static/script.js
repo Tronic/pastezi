@@ -53,8 +53,13 @@ window.addEventListener("load", () => {
     }
     fileinput = document.querySelector("input[type=file]")
     fileinput.addEventListener("change", fileOpen)
+    idinput.addEventListener("change", loadExisting)
     idinput.addEventListener("change", updateMode)
     updateMode()
+    if (idinput.value.length === 0) {
+        // We are making a new paste
+        notify("Making a new paste but will get existing content by a matching filename.")
+    }
 })
 
 const newPaste = ev => {
@@ -82,6 +87,14 @@ const autoPaste = async () => {
     if (text.trim().length === 0) return
     set(text)
     notify(" ⃪ click to upload pasted text")
+}
+
+// On new paste, load any existing paste by the same name
+const loadExisting = async () => {
+    if (get().trim().length > 0) return
+    const res = await fetch("/p/" + encodeURIComponent(paste_id.value))
+    if (res.status !== 200) return
+    set(await res.text())
 }
 
 document.addEventListener('dragover', ev => ev.preventDefault())
