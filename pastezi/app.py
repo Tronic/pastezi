@@ -44,7 +44,6 @@ async def download_paste(req, paste_id):
 async def view_paste(req, paste_id):
     paste = await backend[paste_id]
     layout = Layout(req)
-    print(req.accept)
     h = "text/html" in req.headers.get("accept", "")  # Note: "text/html" in req.accept allows */* too!
     if not paste:
         return html(layout.view_paste(None, paste_id), status=404) if h else empty(404)
