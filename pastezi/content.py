@@ -40,10 +40,13 @@ class Formatter(HtmlFormatter):
                 yield 1, f'<a class=line href=#{i} id={i} tabindex=-1></a>' + line
             else:
                 yield 0, line
-    # A bit shorther wrapper
+    # A bit shorter wrapper, and link URLs
     def _wrap_pre(self, inner):
         yield 0, '<pre><code>'
-        yield from inner
+        for i, t in inner:
+            if i == 1:
+                t = re.sub(r'(http[s]?://\S+)', r'<a href="\1">\1</a>', t)
+            yield i, t
         yield 0, '</code></pre>'
 
 def prettyprint(paste, paste_id):

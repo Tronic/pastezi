@@ -126,6 +126,8 @@ textarea, .CodeMirror {
 }
 code, textarea { font: var(--codefnt); tab-size: var(--tabsz); }
 textarea { padding: 0.3em; border: none; }
+code a { text-decoration: none; color: inherit; }
+code a:hover { text-decoration: underline; }
 
 @media print {
     .highlight .line::before {
