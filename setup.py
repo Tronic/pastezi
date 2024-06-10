@@ -26,7 +26,7 @@ setup(
     setup_requires = ["setuptools_scm"],
     install_requires = [
         "sanic>=22.12",
-        "aioredis>=2.0",
+        "redis>=4.2.0",
         "pygments",
         "metaphone",
         "nltk",

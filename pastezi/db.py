@@ -1,5 +1,4 @@
-import asyncio
-import aioredis
+from redis import asyncio as aioredis
 
 class Backend:
     def __init__(self):
