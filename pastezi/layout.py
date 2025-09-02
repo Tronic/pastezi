@@ -1,7 +1,14 @@
 from html import escape
+from typing import Any
+
 
 class Layout:
-    def __init__(self, req):
+    url: Any
+    header1: str
+    header2: str
+    nav_start: str
+
+    def __init__(self, req: Any) -> None:
         self.url = req.url_for
         self.header1 = """<!DOCTYPE html><meta charset=UTF-8><title>"""
         self.header2 = (
@@ -22,12 +29,20 @@ class Layout:
             f"""<meta name="msapplication-config" content="{self.static("icons/browserconfig.xml")}">"""
             f"""<meta name="theme-color" content="#ffcc33">"""
         )
-        self.nav_start = f"""<header><a id=new title="New paste" href=/></a>"""
-        scripts = "script.js", "codemirror/lib/codemirror.js", "codemirror/mode/meta.js", "codemirror/addon/mode/loadmode.js"
-        for s in scripts: self.header2 += f"""<script src="{self.static(s)}"></script>"""
-    def static(self, filename): return self.url("static", filename=filename)
+        self.nav_start = """<header><a id=new title="New paste" href=/></a>"""
+        scripts = (
+            "script.js",
+            "codemirror/lib/codemirror.js",
+            "codemirror/mode/meta.js",
+            "codemirror/addon/mode/loadmode.js",
+        )
+        for s in scripts:
+            self.header2 += f"""<script src="{self.static(s)}"></script>"""
 
-    def __call__(self, body, head = "", title = ""):
+    def static(self, filename: str) -> str:
+        return self.url("static", filename=filename)
+
+    def __call__(self, body: str, head: str = "", title: str = "") -> str:
         return self.header1 + title + self.header2 + head + self.nav_start + body
 
     def edit_paste(self, paste, paste_id):
@@ -35,7 +50,7 @@ class Layout:
         head = f"""<form action="{self.url("post_paste")}" method=POST enctype=multipart/form-data>"""
         body = (
             """<label id=open title="Open file"><input type=file name=paste></label>"""
-            f"""<label>Save as:<input id=paste_id name=paste_id value="{escape(paste_id or '')}" placeholder="filename.txt (optional)" """
+            f"""<label>Save as:<input id=paste_id name=paste_id value="{escape(paste_id or "")}" placeholder="filename.txt (optional)" """
             r"""pattern="[^/]{3,}" autocomplete=off autofocus></label>"""
             f"""<label id=upload title=Upload><input type=submit></label>"""
             """<data id=notify value=""></data></header><main>"""
@@ -47,12 +62,17 @@ class Layout:
 
     def view_paste(self, paste, paste_id):
         body = f"""<data id=paste_id value="{paste_id}"></data>"""
-        if paste: body += (
-            f"""<a id=copy title="Copy all" href="javascript:copy_all_without_formatting()"></a>"""
-            f"""<a id=dl title=Download href="{self.url("download_paste", paste_id=paste_id)}"></a>"""
-        )
+        if paste:
+            body += (
+                f"""<a id=copy title="Copy all" href="javascript:copy_all_without_formatting()"></a>"""
+                f"""<a id=dl title=Download href="{self.url("download_paste", paste_id=paste_id)}"></a>"""
+            )
         body += f"""<a id=edit title=Edit href="{self.url("edit_paste", paste_id=paste_id)}"></a>"""
         body += """<data id=notify value=""></data></header><main>"""
-        body += paste["html"] if paste else f"<p>{paste_id} not found. This paste may have been deleted or you got the address wrong."
+        body += (
+            paste["html"]
+            if paste
+            else f"<p>{paste_id} not found. This paste may have been deleted or you got the address wrong."
+        )
         body += "</main>"
         return self(body, title=paste_id or "Pastezi")

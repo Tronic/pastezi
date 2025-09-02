@@ -1,0 +1,26 @@
+[project]
+name = "pastezi"
+description = "A modernized version of the Pastezi project."
+version = "0.3.0"
+authors = [
+    { name = "Tronic" }
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "sanic>=22.12",
+    "redis>=4.2.0",
+    "pygments",
+    "metaphone",
+    "nltk",
+    "pronounceable"
+]
+
+[build-system]
+requires = ["uv-build"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "pastezi"
+module-root = ""
+data = ["pastezi/static/"]

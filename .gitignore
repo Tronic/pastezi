@@ -1,6 +1,5 @@
-.vscode
-.env
-env
+.*
+!.gitignore
+*.lock
 .DS_Store
 __pycache__
-Pipfile.lock

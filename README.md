@@ -23,3 +23,19 @@ A PUT request to site root creates a randomly named paste, while a PUT request t
     wget https://paste.zi.fi/p/your_file.txt
 
 Notice that binary files are not supported and that trailing newlines and such may get altered.
+
+## Self hosting
+
+It is recommended to use [uv](https://docs.astral.sh/uv/getting-started/installation/) to install or run directly:
+
+```sh
+uvx --with git+https://github.com/Tronic/pastezi.git sanic pastezi:app
+```
+
+Use [Caddy](https://caddyserver.com/), Nginx or whatever for deployment beyond localhost. Set env `SANIC_SERVER_NAME=https://example.com` before running the server. Caddy config:
+
+```caddyfile
+example.com {
+    reverse_proxy :8000
+}
+```
