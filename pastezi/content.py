@@ -70,7 +70,7 @@ def prettyprint(paste: str, paste_id: str) -> str:
     # Pygments removes initial empty lines, account for that
     initialws = re.search(r"^\s*", paste)
     n = 1 + initialws[0].count("\n") if initialws else 1
-    formatter = Formatter(lineanchors=True, linenostart=n)
+    formatter = Formatter(lineanchors="line", linenostart=n)
     try:
         lexer = get_lexer_for_filename(paste_id)
     except Exception:
